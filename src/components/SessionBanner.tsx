@@ -52,8 +52,9 @@ export default function SessionBanner({ session, meeting }: SessionBannerProps) 
           </>
         )}
       </div>
-      <div className="font-mono text-white tabular-nums shrink-0 ml-4">
-        {elapsed}
+      <div className="flex items-center gap-3 shrink-0 ml-4">
+        <span className="font-mono text-white tabular-nums">{elapsed}</span>
+        <span className="text-gray-600 text-xs">v0.1.0</span>
       </div>
     </div>
   );

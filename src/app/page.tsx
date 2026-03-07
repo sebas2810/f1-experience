@@ -97,6 +97,10 @@ export default function Home() {
             <li>Configure your Philips Hue lights in <Link href="/settings" className="text-f1-red hover:underline">Settings</Link> for ambient flag colors</li>
           </ol>
         </div>
+
+        <div className="mt-8 text-center text-xs text-gray-600">
+          F1 Experience v0.1.0
+        </div>
       </div>
     </main>
   );

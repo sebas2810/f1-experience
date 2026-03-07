@@ -79,7 +79,7 @@ export default function DashboardScreen() {
                 ))}
               </div>
               <div className="max-h-48 overflow-y-auto space-y-1">
-                {meetings.map(meeting => (
+                {(meetings ?? []).map(meeting => (
                   <button
                     key={meeting.meeting_key}
                     onClick={() => fetchSessions(meeting.meeting_key)}
@@ -89,9 +89,9 @@ export default function DashboardScreen() {
                   </button>
                 ))}
               </div>
-              {sessions.length > 0 && (
+              {(sessions ?? []).length > 0 && (
                 <div className="mt-3 border-t border-gray-700 pt-3 space-y-1">
-                  {sessions.map(session => (
+                  {(sessions ?? []).map(session => (
                     <button
                       key={session.session_key}
                       onClick={() => handleSelectSession(session)}

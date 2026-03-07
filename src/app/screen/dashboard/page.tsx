@@ -23,7 +23,7 @@ export default function DashboardScreen() {
       try {
         const res = await fetch(`https://api.openf1.org/v1/meetings?year=${selectedYear}`);
         const data = await res.json();
-        setMeetings(data);
+        if (Array.isArray(data)) setMeetings(data);
       } catch { /* ignore */ }
     }
     fetchMeetings();
@@ -33,7 +33,7 @@ export default function DashboardScreen() {
     try {
       const res = await fetch(`https://api.openf1.org/v1/sessions?meeting_key=${meetingKey}`);
       const data = await res.json();
-      setSessions(data);
+      if (Array.isArray(data)) setSessions(data);
     } catch { /* ignore */ }
   }
 

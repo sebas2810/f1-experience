@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useState } from "react";
 
 const screens = [
   {
@@ -54,6 +55,22 @@ const screens = [
 ];
 
 export default function Home() {
+  const [demoLoading, setDemoLoading] = useState(false);
+  const [demoStatus, setDemoStatus] = useState<string | null>(null);
+
+  async function loadDemo() {
+    setDemoLoading(true);
+    setDemoStatus(null);
+    try {
+      const res = await fetch("/api/demo", { method: "POST" });
+      const data = await res.json();
+      setDemoStatus(data.message || "Demo loaded!");
+    } catch {
+      setDemoStatus("Failed to load demo");
+    }
+    setDemoLoading(false);
+  }
+
   return (
     <main className="min-h-screen p-8">
       <div className="mx-auto max-w-6xl">
@@ -65,6 +82,19 @@ export default function Home() {
           <p className="mt-3 text-lg text-gray-400">
             Multi-screen immersive Formula 1 dashboard
           </p>
+          {/* Demo button */}
+          <div className="mt-6">
+            <button
+              onClick={loadDemo}
+              disabled={demoLoading}
+              className="rounded-lg bg-f1-red px-8 py-3 text-lg font-bold text-white hover:bg-red-700 transition-colors disabled:opacity-50"
+            >
+              {demoLoading ? "Loading..." : "Load Demo Race"}
+            </button>
+            {demoStatus && (
+              <p className="mt-2 text-sm text-green-400">{demoStatus}</p>
+            )}
+          </div>
         </div>
 
         {/* Screen Grid */}

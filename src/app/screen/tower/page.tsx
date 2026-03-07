@@ -4,6 +4,7 @@ import { useRaceData } from "@/hooks/use-race-data";
 import { SectorTime } from "@/components/SectorTime";
 import { TireIcon } from "@/components/TireIcon";
 import { FlagIndicator } from "@/components/FlagIndicator";
+import SessionBanner from "@/components/SessionBanner";
 import { formatLapTime, getSectorColor } from "@/lib/utils";
 import { useMemo } from "react";
 
@@ -47,7 +48,9 @@ export default function TimingTowerScreen() {
   }, [state.allLaps]);
 
   return (
-    <div className="min-h-screen bg-f1-dark p-3">
+    <div className="min-h-screen bg-f1-dark">
+      <SessionBanner session={state.session} meeting={state.meeting} />
+      <div className="p-3">
       {/* Header - compact for portrait */}
       <div className="mb-3 flex items-center justify-between">
         <div className="flex items-center gap-2">
@@ -118,6 +121,7 @@ export default function TimingTowerScreen() {
             </div>
           );
         })}
+      </div>
       </div>
     </div>
   );

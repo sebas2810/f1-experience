@@ -3,12 +3,15 @@
 import { useRaceData } from "@/hooks/use-race-data";
 import { TrackMap } from "@/components/TrackMap";
 import { FlagIndicator } from "@/components/FlagIndicator";
+import SessionBanner from "@/components/SessionBanner";
 
 export default function TrackMapScreen() {
   const { state, connected } = useRaceData();
 
   return (
-    <div className="flex h-screen flex-col bg-f1-dark p-4">
+    <div className="flex h-screen flex-col bg-f1-dark">
+      <SessionBanner session={state.session} meeting={state.meeting} />
+      <div className="flex-1 flex flex-col p-4">
       {/* Header */}
       <div className="mb-4 flex items-center justify-between">
         <div className="flex items-center gap-4">
@@ -47,6 +50,7 @@ export default function TrackMapScreen() {
             </div>
           );
         })}
+      </div>
       </div>
     </div>
   );

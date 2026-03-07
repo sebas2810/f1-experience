@@ -60,6 +60,16 @@ class RaceStore {
     this.notify();
   }
 
+  updateSession(session: import("@/lib/openf1/types").Session) {
+    this.state.session = session;
+    this.notify();
+  }
+
+  updateMeeting(meeting: import("@/lib/openf1/types").Meeting) {
+    this.state.meeting = meeting;
+    this.notify();
+  }
+
   updateDrivers(drivers: Driver[]) {
     const map: Record<number, Driver> = {};
     for (const d of drivers) map[d.driver_number] = d;

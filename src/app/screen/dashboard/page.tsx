@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRaceData } from "@/hooks/use-race-data";
 import { FlagIndicator } from "@/components/FlagIndicator";
+import SessionBanner from "@/components/SessionBanner";
 import { WeatherWidget } from "@/components/WeatherWidget";
 import { RaceControlFeed } from "@/components/RaceControlFeed";
 import { TireIcon } from "@/components/TireIcon";
@@ -45,8 +46,9 @@ export default function DashboardScreen() {
   const top5 = state.positions.slice(0, 5);
 
   return (
-    <div className="min-h-screen bg-f1-dark p-4">
-      <div className="mx-auto max-w-7xl">
+    <div className="min-h-screen bg-f1-dark">
+      <SessionBanner session={state.session} meeting={state.meeting} />
+      <div className="p-4 mx-auto max-w-7xl">
         {/* Header */}
         <div className="mb-6 flex items-center justify-between">
           <h1 className="text-2xl font-black tracking-tight">

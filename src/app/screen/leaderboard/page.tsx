@@ -3,13 +3,16 @@
 import { useRaceData } from "@/hooks/use-race-data";
 import { DriverRow } from "@/components/DriverRow";
 import { FlagIndicator } from "@/components/FlagIndicator";
+import SessionBanner from "@/components/SessionBanner";
 import { formatLapTime } from "@/lib/utils";
 
 export default function LeaderboardScreen() {
   const { state, connected } = useRaceData();
 
   return (
-    <div className="min-h-screen bg-f1-dark p-4">
+    <div className="min-h-screen bg-f1-dark">
+      <SessionBanner session={state.session} meeting={state.meeting} />
+      <div className="p-4">
       {/* Header */}
       <div className="mb-4 flex items-center justify-between">
         <div className="flex items-center gap-4">
@@ -72,6 +75,7 @@ export default function LeaderboardScreen() {
             />
           );
         })}
+      </div>
       </div>
     </div>
   );

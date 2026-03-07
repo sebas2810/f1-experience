@@ -4,6 +4,7 @@ import { useMemo } from "react";
 import { useRaceData } from "@/hooks/use-race-data";
 import { DriverCard } from "@/components/DriverCard";
 import { FlagIndicator } from "@/components/FlagIndicator";
+import SessionBanner from "@/components/SessionBanner";
 import { formatLapTime } from "@/lib/utils";
 
 export default function Top10Screen() {
@@ -48,7 +49,9 @@ export default function Top10Screen() {
   }, [state.allLaps]);
 
   return (
-    <div className="min-h-screen bg-f1-dark p-4">
+    <div className="min-h-screen bg-f1-dark">
+      <SessionBanner session={state.session} meeting={state.meeting} />
+      <div className="p-4">
       {/* Header */}
       <div className="mb-4 flex items-center justify-between">
         <div className="flex items-center gap-4">
@@ -101,6 +104,7 @@ export default function Top10Screen() {
           })}
         </div>
       )}
+      </div>
     </div>
   );
 }

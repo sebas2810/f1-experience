@@ -68,12 +68,17 @@ export function useRaceData() {
     };
   }, [connect]);
 
-  const selectSession = useCallback(async (sessionKey: number, meetingKey: number) => {
-    await fetch("/api/session", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ sessionKey, meetingKey }),
-    });
+  const selectSession = useCallback(async (sessionKey: number, meetingKey: number): Promise<boolean> => {
+    try {
+      const res = await fetch("/api/session", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ sessionKey, meetingKey }),
+      });
+      return res.ok;
+    } catch {
+      return false;
+    }
   }, []);
 
   return { state, connected, selectSession };

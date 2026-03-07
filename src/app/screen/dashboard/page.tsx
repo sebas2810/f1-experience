@@ -15,7 +15,9 @@ export default function DashboardScreen() {
   const [sessions, setSessions] = useState<Session[]>([]);
   const [meetings, setMeetings] = useState<Meeting[]>([]);
   const [selectedYear, setSelectedYear] = useState(2024);
+  const [selectedMeetingKey, setSelectedMeetingKey] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   // Fetch meetings for selected year
   useEffect(() => {
@@ -30,6 +32,9 @@ export default function DashboardScreen() {
   }, [selectedYear]);
 
   async function fetchSessions(meetingKey: number) {
+    setSelectedMeetingKey(meetingKey);
+    setSessions([]);
+    setError(null);
     try {
       const res = await fetch(`https://api.openf1.org/v1/sessions?meeting_key=${meetingKey}`);
       const data = await res.json();
@@ -39,8 +44,17 @@ export default function DashboardScreen() {
 
   async function handleSelectSession(session: Session) {
     setLoading(true);
-    await selectSession(session.session_key, session.meeting_key);
-    setLoading(false);
+    setError(null);
+    try {
+      const res = await selectSession(session.session_key, session.meeting_key);
+      if (!res) {
+        setError("Failed to load session");
+      }
+    } catch {
+      setError("Failed to load session");
+    } finally {
+      setLoading(false);
+    }
   }
 
   const top5 = state.positions.slice(0, 5);
@@ -79,35 +93,58 @@ export default function DashboardScreen() {
                 ))}
               </div>
               <div className="max-h-48 overflow-y-auto space-y-1">
-                {(meetings ?? []).map(meeting => (
-                  <button
-                    key={meeting.meeting_key}
-                    onClick={() => fetchSessions(meeting.meeting_key)}
-                    className="w-full text-left px-3 py-2 rounded text-sm hover:bg-f1-gray transition-colors"
-                  >
-                    {meeting.meeting_name}
-                  </button>
-                ))}
+                {(meetings ?? []).map(meeting => {
+                  const isSelected = selectedMeetingKey === meeting.meeting_key;
+                  const isActive = state.meetingKey === meeting.meeting_key;
+                  return (
+                    <button
+                      key={meeting.meeting_key}
+                      onClick={() => fetchSessions(meeting.meeting_key)}
+                      className={`w-full text-left px-3 py-2 rounded text-sm transition-colors ${
+                        isActive
+                          ? "bg-f1-red/10 text-white font-semibold border-l-2 border-f1-red"
+                          : isSelected
+                            ? "bg-f1-gray text-white"
+                            : "hover:bg-f1-gray text-gray-300"
+                      }`}
+                    >
+                      {meeting.meeting_name}
+                      {isActive && <span className="ml-2 text-xs text-f1-red">(active)</span>}
+                    </button>
+                  );
+                })}
               </div>
+              {error && (
+                <div className="mt-2 px-3 py-2 rounded bg-red-900/30 text-red-400 text-xs">
+                  {error}
+                </div>
+              )}
               {(sessions ?? []).length > 0 && (
                 <div className="mt-3 border-t border-gray-700 pt-3 space-y-1">
-                  {(sessions ?? []).map(session => (
-                    <button
-                      key={session.session_key}
-                      onClick={() => handleSelectSession(session)}
-                      disabled={loading}
-                      className={`w-full text-left px-3 py-2 rounded text-sm transition-colors ${
-                        state.sessionKey === session.session_key
-                          ? "bg-f1-red/20 text-f1-red border border-f1-red/50"
-                          : "hover:bg-f1-gray"
-                      } ${loading ? "opacity-50" : ""}`}
-                    >
-                      {session.session_name}
-                      <span className="text-xs text-gray-500 ml-2">
-                        {new Date(session.date_start).toLocaleDateString()}
-                      </span>
-                    </button>
-                  ))}
+                  {(sessions ?? []).map(session => {
+                    const isActive = state.sessionKey === session.session_key;
+                    return (
+                      <button
+                        key={session.session_key}
+                        onClick={() => handleSelectSession(session)}
+                        disabled={loading}
+                        className={`w-full text-left px-3 py-2 rounded text-sm transition-colors ${
+                          isActive
+                            ? "bg-f1-red text-white font-bold shadow-lg shadow-f1-red/20"
+                            : "hover:bg-f1-gray text-gray-300"
+                        } ${loading ? "opacity-50 cursor-wait" : ""}`}
+                      >
+                        <span className="flex items-center justify-between">
+                          <span>
+                            {isActive && "▸ "}{session.session_name}
+                          </span>
+                          <span className={`text-xs ${isActive ? "text-white/70" : "text-gray-500"}`}>
+                            {new Date(session.date_start).toLocaleDateString()}
+                          </span>
+                        </span>
+                      </button>
+                    );
+                  })}
                 </div>
               )}
             </div>

@@ -1,0 +1,53 @@
+@import "tailwindcss";
+
+@theme {
+  --color-f1-red: #e10600;
+  --color-f1-dark: #111111;
+  --color-f1-carbon: #1a1a1a;
+  --color-f1-gray: #2a2a2a;
+  --color-f1-light: #f0f0f0;
+  --color-f1-purple: #a855f7;
+  --color-f1-green: #22c55e;
+  --color-f1-yellow: #eab308;
+
+  --color-tire-soft: #ff3333;
+  --color-tire-medium: #f5c542;
+  --color-tire-hard: #e0e0e0;
+  --color-tire-inter: #39b54a;
+  --color-tire-wet: #2196f3;
+
+  --color-sector-pb: #22c55e;
+  --color-sector-best: #a855f7;
+  --color-sector-slower: #eab308;
+}
+
+body {
+  background: var(--color-f1-dark);
+  color: var(--color-f1-light);
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+/* Smooth position change animations */
+.driver-row {
+  transition: transform 0.5s ease-in-out, opacity 0.3s ease;
+}
+
+/* Scrolling ticker for Glance LED */
+@keyframes ticker-scroll {
+  0% { transform: translateX(100%); }
+  100% { transform: translateX(-100%); }
+}
+
+.ticker-scroll {
+  animation: ticker-scroll 20s linear infinite;
+}
+
+/* Flag pulse animation */
+@keyframes flag-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.flag-pulse {
+  animation: flag-pulse 1s ease-in-out infinite;
+}

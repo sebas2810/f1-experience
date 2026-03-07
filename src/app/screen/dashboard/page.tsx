@@ -42,12 +42,6 @@ export default function DashboardScreen() {
     setLoading(false);
   }
 
-  async function loadDemo() {
-    setLoading(true);
-    await fetch("/api/demo", { method: "POST" });
-    setLoading(false);
-  }
-
   const top5 = state.positions.slice(0, 5);
 
   return (
@@ -71,13 +65,6 @@ export default function DashboardScreen() {
             {/* Session Selector */}
             <div className="rounded-lg bg-f1-carbon p-4">
               <h2 className="mb-3 font-bold text-sm uppercase tracking-wider text-gray-400">Session Selector</h2>
-              <button
-                onClick={loadDemo}
-                disabled={loading}
-                className="w-full mb-3 rounded bg-f1-red px-4 py-2 text-sm font-bold text-white hover:bg-red-700 transition-colors disabled:opacity-50"
-              >
-                {loading ? "Loading..." : "Load Demo Race (Monaco)"}
-              </button>
               <div className="flex gap-2 mb-3">
                 {[2023, 2024, 2025].map(year => (
                   <button

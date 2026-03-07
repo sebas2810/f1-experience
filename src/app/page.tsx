@@ -1,7 +1,4 @@
-"use client";
-
 import Link from "next/link";
-import { useState } from "react";
 
 const screens = [
   {
@@ -55,22 +52,6 @@ const screens = [
 ];
 
 export default function Home() {
-  const [demoLoading, setDemoLoading] = useState(false);
-  const [demoStatus, setDemoStatus] = useState<string | null>(null);
-
-  async function loadDemo() {
-    setDemoLoading(true);
-    setDemoStatus(null);
-    try {
-      const res = await fetch("/api/demo", { method: "POST" });
-      const data = await res.json();
-      setDemoStatus(data.message || "Demo loaded!");
-    } catch {
-      setDemoStatus("Failed to load demo");
-    }
-    setDemoLoading(false);
-  }
-
   return (
     <main className="min-h-screen p-8">
       <div className="mx-auto max-w-6xl">
@@ -82,19 +63,6 @@ export default function Home() {
           <p className="mt-3 text-lg text-gray-400">
             Multi-screen immersive Formula 1 dashboard
           </p>
-          {/* Demo button */}
-          <div className="mt-6">
-            <button
-              onClick={loadDemo}
-              disabled={demoLoading}
-              className="rounded-lg bg-f1-red px-8 py-3 text-lg font-bold text-white hover:bg-red-700 transition-colors disabled:opacity-50"
-            >
-              {demoLoading ? "Loading..." : "Load Demo Race"}
-            </button>
-            {demoStatus && (
-              <p className="mt-2 text-sm text-green-400">{demoStatus}</p>
-            )}
-          </div>
         </div>
 
         {/* Screen Grid */}
@@ -123,10 +91,10 @@ export default function Home() {
         <div className="mt-12 rounded-xl bg-f1-carbon p-6">
           <h2 className="text-lg font-bold mb-3">Quick Start</h2>
           <ol className="list-decimal list-inside space-y-2 text-sm text-gray-400">
-            <li>Go to <Link href="/settings" className="text-f1-red hover:underline">Settings</Link> and select a session (or use the dashboard)</li>
+            <li>Go to <Link href="/screen/dashboard" className="text-f1-red hover:underline">Dashboard</Link> and select a year, race weekend, and session</li>
             <li>Open each screen view on a different browser window or device</li>
             <li>All screens sync automatically via real-time data stream</li>
-            <li>Configure your Philips Hue lights for ambient flag colors</li>
+            <li>Configure your Philips Hue lights in <Link href="/settings" className="text-f1-red hover:underline">Settings</Link> for ambient flag colors</li>
           </ol>
         </div>
       </div>

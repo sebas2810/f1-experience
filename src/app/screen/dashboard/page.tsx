@@ -57,11 +57,97 @@ export default function DashboardScreen() {
     }
   }
 
+  async function handleReplaySession(session: Session) {
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await fetch("/api/replay", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "start", sessionKey: session.session_key, meetingKey: session.meeting_key }),
+      });
+      if (!res.ok) setError("Failed to start replay");
+    } catch {
+      setError("Failed to start replay");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function replayAction(action: string, speed?: number) {
+    await fetch("/api/replay", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action, speed }),
+    });
+  }
+
   const top5 = state.positions.slice(0, 5);
 
   return (
     <div className="min-h-screen bg-f1-dark">
       <SessionBanner session={state.session} meeting={state.meeting} />
+      {state.replay?.active && (
+        <div className="bg-f1-carbon border-b border-gray-700 px-4 py-2">
+          <div className="mx-auto max-w-7xl flex items-center gap-4">
+            <span className="text-xs font-bold uppercase tracking-wider text-f1-red">Replay</span>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => replayAction(state.replay?.playing ? "pause" : "play")}
+                className="px-3 py-1 rounded bg-f1-gray hover:bg-gray-600 text-sm font-bold transition-colors"
+              >
+                {state.replay?.playing ? "⏸" : "▶"}
+              </button>
+              <button
+                onClick={() => replayAction("stop")}
+                className="px-3 py-1 rounded bg-f1-gray hover:bg-gray-600 text-sm font-bold transition-colors"
+              >
+                ⏹
+              </button>
+            </div>
+            <div className="flex items-center gap-1">
+              {[1, 2, 5, 10, 20].map(s => (
+                <button
+                  key={s}
+                  onClick={() => replayAction("speed", s)}
+                  className={`px-2 py-1 rounded text-xs font-mono font-bold transition-colors ${
+                    state.replay?.speed === s
+                      ? "bg-f1-red text-white"
+                      : "bg-f1-gray text-gray-300 hover:bg-gray-600"
+                  }`}
+                >
+                  {s}x
+                </button>
+              ))}
+            </div>
+            <div className="flex-1 flex items-center gap-3">
+              <span className="text-xs text-gray-400 font-mono">
+                {state.replay?.currentTime
+                  ? new Date(state.replay.currentTime).toLocaleTimeString()
+                  : "--:--:--"}
+              </span>
+              <div className="flex-1 h-1 bg-f1-gray rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-f1-red rounded-full transition-all duration-200"
+                  style={{
+                    width: `${
+                      state.replay?.startTime && state.replay?.endTime && state.replay?.currentTime
+                        ? ((new Date(state.replay.currentTime).getTime() - new Date(state.replay.startTime).getTime()) /
+                            (new Date(state.replay.endTime).getTime() - new Date(state.replay.startTime).getTime())) * 100
+                        : 0
+                    }%`,
+                  }}
+                />
+              </div>
+              <span className="text-xs text-gray-400 font-mono">
+                {state.replay?.endTime
+                  ? new Date(state.replay.endTime).toLocaleTimeString()
+                  : "--:--:--"}
+              </span>
+            </div>
+          </div>
+        </div>
+      )}
       <div className="p-4 mx-auto max-w-7xl">
         {/* Header */}
         <div className="mb-6 flex items-center justify-between">
@@ -123,26 +209,40 @@ export default function DashboardScreen() {
                 <div className="mt-3 border-t border-gray-700 pt-3 space-y-1">
                   {(sessions ?? []).map(session => {
                     const isActive = state.sessionKey === session.session_key;
+                    const isReplaying = isActive && !!state.replay?.active;
                     return (
-                      <button
-                        key={session.session_key}
-                        onClick={() => handleSelectSession(session)}
-                        disabled={loading}
-                        className={`w-full text-left px-3 py-2 rounded text-sm transition-colors ${
-                          isActive
-                            ? "bg-f1-red text-white font-bold shadow-lg shadow-f1-red/20"
-                            : "hover:bg-f1-gray text-gray-300"
-                        } ${loading ? "opacity-50 cursor-wait" : ""}`}
-                      >
-                        <span className="flex items-center justify-between">
-                          <span>
-                            {isActive && "▸ "}{session.session_name}
+                      <div key={session.session_key} className={`flex items-center gap-1 rounded text-sm transition-colors ${
+                        isActive
+                          ? "bg-f1-red text-white font-bold shadow-lg shadow-f1-red/20"
+                          : "hover:bg-f1-gray text-gray-300"
+                      } ${loading ? "opacity-50 cursor-wait" : ""}`}>
+                        <button
+                          onClick={() => handleSelectSession(session)}
+                          disabled={loading}
+                          className="flex-1 text-left px-3 py-2"
+                        >
+                          <span className="flex items-center justify-between">
+                            <span>
+                              {isReplaying ? "▶ " : isActive ? "▸ " : ""}{session.session_name}
+                            </span>
+                            <span className={`text-xs ${isActive ? "text-white/70" : "text-gray-500"}`}>
+                              {new Date(session.date_start).toLocaleDateString()}
+                            </span>
                           </span>
-                          <span className={`text-xs ${isActive ? "text-white/70" : "text-gray-500"}`}>
-                            {new Date(session.date_start).toLocaleDateString()}
-                          </span>
-                        </span>
-                      </button>
+                        </button>
+                        <button
+                          onClick={() => handleReplaySession(session)}
+                          disabled={loading}
+                          title="Replay session"
+                          className={`px-2 py-2 rounded-r text-xs font-bold transition-colors ${
+                            isReplaying
+                              ? "text-white/90"
+                              : "text-gray-500 hover:text-white hover:bg-white/10"
+                          }`}
+                        >
+                          &#9654;
+                        </button>
+                      </div>
                     );
                   })}
                 </div>

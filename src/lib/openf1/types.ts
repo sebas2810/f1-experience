@@ -162,6 +162,15 @@ export interface TeamRadio {
 
 export type FlagStatus = "GREEN" | "YELLOW" | "DOUBLE_YELLOW" | "RED" | "CHEQUERED" | "CLEAR" | "BLUE" | "BLACK" | "BLACK_AND_WHITE" | "NONE";
 
+export interface ReplayState {
+  active: boolean;
+  playing: boolean;
+  speed: number;
+  currentTime: string;
+  startTime: string;
+  endTime: string;
+}
+
 export interface RaceState {
   sessionKey: number | null;
   meetingKey: number | null;
@@ -184,4 +193,5 @@ export interface RaceState {
   totalLaps: number | null;
   fastestLap: { driverNumber: number; time: number } | null;
   lastUpdated: string;
+  replay: ReplayState | null;
 }

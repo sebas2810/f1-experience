@@ -1,5 +1,5 @@
 import type {
-  RaceState, Driver, Position, Interval, Lap, Stint,
+  RaceState, ReplayState, Driver, Position, Interval, Lap, Stint,
   PitStop, RaceControlMessage, Weather, CarData, Location,
   FlagStatus,
 } from "@/lib/openf1/types";
@@ -28,6 +28,7 @@ const defaultState: RaceState = {
   totalLaps: null,
   fastestLap: null,
   lastUpdated: new Date().toISOString(),
+  replay: null,
 };
 
 class RaceStore {
@@ -188,6 +189,11 @@ class RaceStore {
     for (const l of locations) {
       this.state.locations[l.driver_number] = l;
     }
+    this.notify();
+  }
+
+  setReplay(replay: ReplayState | null) {
+    this.state.replay = replay;
     this.notify();
   }
 }

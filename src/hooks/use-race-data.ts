@@ -25,6 +25,7 @@ const defaultState: RaceState = {
   totalLaps: null,
   fastestLap: null,
   lastUpdated: "",
+  replay: null,
 };
 
 export function useRaceData() {

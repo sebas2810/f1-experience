@@ -2,30 +2,17 @@
 
 import { useRaceData } from "@/hooks/use-race-data";
 import { TrackMap } from "@/components/TrackMap";
-import { FlagIndicator } from "@/components/FlagIndicator";
-import SessionBanner from "@/components/SessionBanner";
 
 export default function TrackMapScreen() {
-  const { state, connected } = useRaceData();
+  const { state } = useRaceData();
 
   return (
-    <div className="flex h-screen flex-col bg-f1-dark">
-      <SessionBanner session={state.session} meeting={state.meeting} />
-      <div className="flex-1 flex flex-col p-4">
+    <div className="flex-1 flex flex-col p-4">
       {/* Header */}
-      <div className="mb-4 flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <h1 className="text-2xl font-black tracking-tight">
-            <span className="text-f1-red">TRACK</span> MAP
-          </h1>
-          <FlagIndicator flag={state.currentFlag} size="sm" />
-        </div>
-        <div className="flex items-center gap-2">
-          <span className="text-sm font-mono">
-            LAP {state.currentLap || "—"}
-          </span>
-          <div className={`h-2 w-2 rounded-full ${connected ? "bg-green-500" : "bg-red-500"}`} />
-        </div>
+      <div className="mb-4">
+        <h1 className="text-2xl font-black tracking-tight">
+          <span className="text-f1-red">TRACK</span> MAP
+        </h1>
       </div>
 
       {/* Track visualization */}
@@ -50,7 +37,6 @@ export default function TrackMapScreen() {
             </div>
           );
         })}
-      </div>
       </div>
     </div>
   );

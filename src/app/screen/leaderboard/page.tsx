@@ -2,38 +2,25 @@
 
 import { useRaceData } from "@/hooks/use-race-data";
 import { DriverRow } from "@/components/DriverRow";
-import { FlagIndicator } from "@/components/FlagIndicator";
-import SessionBanner from "@/components/SessionBanner";
 import { formatLapTime } from "@/lib/utils";
 
 export default function LeaderboardScreen() {
-  const { state, connected } = useRaceData();
+  const { state } = useRaceData();
 
   return (
-    <div className="min-h-screen bg-f1-dark">
-      <SessionBanner session={state.session} meeting={state.meeting} />
-      <div className="p-4">
+    <div className="p-4">
       {/* Header */}
       <div className="mb-4 flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <h1 className="text-2xl font-black tracking-tight">
-            <span className="text-f1-red">LIVE</span> LEADERBOARD
-          </h1>
-          <FlagIndicator flag={state.currentFlag} size="sm" />
-        </div>
+        <h1 className="text-2xl font-black tracking-tight">
+          <span className="text-f1-red">LIVE</span> LEADERBOARD
+        </h1>
         <div className="flex items-center gap-4 text-sm">
-          {state.currentLap > 0 && (
-            <span className="font-mono">
-              LAP {state.currentLap}{state.totalLaps ? `/${state.totalLaps}` : ""}
-            </span>
-          )}
           {state.fastestLap && (
             <span className="text-f1-purple font-mono">
               FL: {state.drivers[state.fastestLap.driverNumber]?.name_acronym}{" "}
               {formatLapTime(state.fastestLap.time)}
             </span>
           )}
-          <div className={`h-2 w-2 rounded-full ${connected ? "bg-green-500" : "bg-red-500"}`} />
         </div>
       </div>
 
@@ -75,7 +62,6 @@ export default function LeaderboardScreen() {
             />
           );
         })}
-      </div>
       </div>
     </div>
   );

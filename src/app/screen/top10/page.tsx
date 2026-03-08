@@ -3,12 +3,9 @@
 import { useMemo } from "react";
 import { useRaceData } from "@/hooks/use-race-data";
 import { DriverCard } from "@/components/DriverCard";
-import { FlagIndicator } from "@/components/FlagIndicator";
-import SessionBanner from "@/components/SessionBanner";
-import { formatLapTime } from "@/lib/utils";
 
 export default function Top10Screen() {
-  const { state, connected } = useRaceData();
+  const { state } = useRaceData();
 
   const top10 = state.positions.slice(0, 10);
 
@@ -49,29 +46,12 @@ export default function Top10Screen() {
   }, [state.allLaps]);
 
   return (
-    <div className="min-h-screen bg-f1-dark">
-      <SessionBanner session={state.session} meeting={state.meeting} />
-      <div className="p-4">
+    <div className="p-4">
       {/* Header */}
-      <div className="mb-4 flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <h1 className="text-2xl font-black tracking-tight">
-            <span className="text-f1-red">TOP 10</span> DRIVERS
-          </h1>
-          <FlagIndicator flag={state.currentFlag} size="sm" />
-        </div>
-        <div className="flex items-center gap-4 text-sm">
-          <span className="font-mono">
-            LAP {state.currentLap || "—"}{state.totalLaps ? `/${state.totalLaps}` : ""}
-          </span>
-          {state.fastestLap && (
-            <span className="text-f1-purple font-mono">
-              FL: {state.drivers[state.fastestLap.driverNumber]?.name_acronym}{" "}
-              {formatLapTime(state.fastestLap.time)}
-            </span>
-          )}
-          <div className={`h-2 w-2 rounded-full ${connected ? "bg-green-500" : "bg-red-500"}`} />
-        </div>
+      <div className="mb-4">
+        <h1 className="text-2xl font-black tracking-tight">
+          <span className="text-f1-red">TOP 10</span> DRIVERS
+        </h1>
       </div>
 
       {/* 2x5 Grid of driver cards */}
@@ -104,7 +84,6 @@ export default function Top10Screen() {
           })}
         </div>
       )}
-      </div>
     </div>
   );
 }

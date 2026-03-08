@@ -3,12 +3,10 @@
 import { useState, useMemo } from "react";
 import { useRaceData } from "@/hooks/use-race-data";
 import { TireIcon } from "@/components/TireIcon";
-import { FlagIndicator } from "@/components/FlagIndicator";
-import SessionBanner from "@/components/SessionBanner";
 import { formatLapTime, formatGap, formatSpeed } from "@/lib/utils";
 
 export default function CompareScreen() {
-  const { state, connected } = useRaceData();
+  const { state } = useRaceData();
   const [driver1, setDriver1] = useState<number | null>(null);
   const [driver2, setDriver2] = useState<number | null>(null);
 
@@ -98,18 +96,12 @@ export default function CompareScreen() {
   }
 
   return (
-    <div className="min-h-screen bg-f1-dark">
-      <SessionBanner session={state.session} meeting={state.meeting} />
-      <div className="p-4">
+    <div className="p-4">
       {/* Header */}
-      <div className="mb-4 flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <h1 className="text-2xl font-black tracking-tight">
-            <span className="text-f1-red">DRIVER</span> COMPARISON
-          </h1>
-          <FlagIndicator flag={state.currentFlag} size="sm" />
-        </div>
-        <div className={`h-2 w-2 rounded-full ${connected ? "bg-green-500" : "bg-red-500"}`} />
+      <div className="mb-4">
+        <h1 className="text-2xl font-black tracking-tight">
+          <span className="text-f1-red">DRIVER</span> COMPARISON
+        </h1>
       </div>
 
       {/* Driver selectors */}
@@ -151,7 +143,6 @@ export default function CompareScreen() {
         <ComparisonColumn driverNumber={driver1} />
         <div className="w-px bg-gray-700" />
         <ComparisonColumn driverNumber={driver2} />
-      </div>
       </div>
     </div>
   );

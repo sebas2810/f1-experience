@@ -3,13 +3,11 @@
 import { useRaceData } from "@/hooks/use-race-data";
 import { SectorTime } from "@/components/SectorTime";
 import { TireIcon } from "@/components/TireIcon";
-import { FlagIndicator } from "@/components/FlagIndicator";
-import SessionBanner from "@/components/SessionBanner";
 import { formatLapTime, getSectorColor } from "@/lib/utils";
 import { useMemo } from "react";
 
 export default function TimingTowerScreen() {
-  const { state, connected } = useRaceData();
+  const { state } = useRaceData();
 
   // Calculate overall best sectors
   const overallBestSectors = useMemo(() => {
@@ -48,19 +46,10 @@ export default function TimingTowerScreen() {
   }, [state.allLaps]);
 
   return (
-    <div className="min-h-screen bg-f1-dark">
-      <SessionBanner session={state.session} meeting={state.meeting} />
-      <div className="p-3">
+    <div className="p-3">
       {/* Header - compact for portrait */}
-      <div className="mb-3 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <h1 className="text-lg font-black">TIMING</h1>
-          <FlagIndicator flag={state.currentFlag} size="sm" />
-        </div>
-        <div className="flex items-center gap-2 text-xs">
-          <span className="font-mono">L{state.currentLap}</span>
-          <div className={`h-2 w-2 rounded-full ${connected ? "bg-green-500" : "bg-red-500"}`} />
-        </div>
+      <div className="mb-3">
+        <h1 className="text-lg font-black">TIMING TOWER</h1>
       </div>
 
       {/* Timing tower */}
@@ -121,7 +110,6 @@ export default function TimingTowerScreen() {
             </div>
           );
         })}
-      </div>
       </div>
     </div>
   );
